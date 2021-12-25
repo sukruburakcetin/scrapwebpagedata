@@ -5,12 +5,13 @@ from bs4 import BeautifulSoup
 import urllib.request
 from requests_html import HTMLSession
 import pandas as pd
+
 # specify the url
 urlpage = 'http://ihe.istanbul/'
 print(urlpage)
 # run firefox webdriver from executable path of your choice
 # driver = webdriver.Firefox(executable_path='C:/Users/BURAK/Desktop/geckodriver-v0.30.0-win64/geckodriver.exe')
-driver = webdriver.Chrome(executable_path='C:/Users/BURAK/Desktop/chromedriver_win32/chromedriver.exe')
+driver = webdriver.Chrome()
 
 # get web page
 driver.get(urlpage)
@@ -22,17 +23,31 @@ driver.find_element_by_name("ilceID").click()
 time.sleep(1)
 driver.find_element_by_xpath("//option[@value='5']").click()
 time.sleep(1)
-# result = driver.find_element_by_xpath("/html/body/script[3]/text()[contains(., 'var point')]")
 
 soup = BeautifulSoup(driver.page_source, features="lxml")
 html_content = soup.contents[0]
 
-_script = html_content.find_all("script")[23]  # 23 for chrome, 24 for firefox
-
-# found_json = [i for i in _script if i.text.find("LatLng") > 0]
-print(_script)
+_script = html_content.find_all("script")[32]  # 23 for chrome, 24 for firefox
 
 
+def Convert(string):
+    li = list(string.split(" "))
+    return li
+
+
+print(Convert(_script.text))
+# print(_script)
+lst = Convert(_script.text)
+sonuc = [k for k in lst if 'LatLng' in k]
+print(sonuc)
+sonuc_edited = sonuc[1].split("(")
+sonuc_edited_edited = sonuc_edited[1].split(",")
+lat = sonuc_edited_edited[0]
+sonuc_edited_edited_edited = sonuc_edited_edited[1].split(")")
+long = sonuc_edited_edited_edited[0]
+print(lat)
+print(long)
+print("pause")
 # sleep for 30s
 # time.sleep(30)
 # driver.quit()
