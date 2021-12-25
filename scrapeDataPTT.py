@@ -28,16 +28,20 @@ typeCount = len(types[1].text.split("\n"))
 for z in range(typeCount):
     y = 0
     i = 0
-    driver.find_element_by_id('MainContent_ASPxSplitterPageContent_LeftMenu_pageControl_navBar_GCTC0_cmbPTTIl_0_B-1').click()
-    WebDriverWait(driver, 10).until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "#MainContent_ASPxSplitterPageContent_LeftMenu_pageControl_navBar_GCTC0_cmbPTTIl_0_DDD_L_LBT")))
+    time.sleep(1)
+    driver.find_element_by_xpath('//*[@id="MainContent_ASPxSplitterPageContent_LeftMenu_pageControl_navBar_GCTC0_cmbPTTIl_0_I"]').click()
+    WebDriverWait(driver, 10).until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "#MainContent_ASPxSplitterPageContent_LeftMenu_pageControl_navBar_GCTC0_cmbPTTIl_0_I")))
     driver.find_element_by_id(
         'MainContent_ASPxSplitterPageContent_LeftMenu_pageControl_navBar_GCTC0_cmbPTTIl_0_DDD_L_LBI40T0').click()
     driver.find_element_by_id(
         'MainContent_ASPxSplitterPageContent_LeftMenu_pageControl_navBar_GCTC0_cmbPTTTur_0_RB' + str(z)).click()
+    time.sleep(1)
     WebDriverWait(driver, 10).until(EC.visibility_of_all_elements_located((By.CSS_SELECTOR, "#SelectedCompany0")))
     soup = BeautifulSoup(driver.page_source, features="lxml")
     html_content = soup.contents[0]
     parent = driver.find_element_by_xpath('//*[@id="PTTIsYeriSonuc"]')
+    time.sleep(1)
+    print("sube sayi: ", len(html_content.find_all("div", {'class': 'act'})))
     for i in range(len(html_content.find_all("div", {'class': 'act'}))):
         element = tag + idPrefix + str(y) + "\"" + tail
         name = (parent.find_element_by_xpath(element)).text
@@ -52,6 +56,7 @@ for z in range(typeCount):
             # print(name)
             # print("----------iterating next point------------")
         y += 1
+        print(y)
         data = [name, (types[1].text.split("\n"))[z], lat, long]
         # opening the csv file in 'w+' mode
         file = open('g4g.csv', 'a+', newline='', encoding='utf-8')
@@ -67,5 +72,3 @@ for z in range(typeCount):
             with file:
                 write = csv.writer(file)
                 writer.writerow({'NAME': data[0], 'TYPE': data[1], 'LATITUDE': data[2], 'LONGITUDE': data[3]})
-
-
